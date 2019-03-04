@@ -1,0 +1,109 @@
+#include<iostream>
+#include<conio.h>
+using namespace std;
+int main()
+{
+	
+	int p,n;
+	cout<<"Enter no. of processes\n";
+	cin>>p;
+	cout<<"Enter no. of resource types\n";
+	cin>>n;
+	int all[p][n],max[p][n],t_avail[n],rem[p][n];
+	int i,j,k,state[p],count=p,kk=1,list[p];
+	cout<<"Enter all. instances of each resource for each process\n";
+	for(i=0;i<p;i++)
+	for(j=0;j<n;j++)
+	{
+	cin>>all[i][j];
+	state[i]=0;
+    }
+	cout<<"Enter maximum need of each process\n";
+	for(i=0;i<p;i++)
+	for(j=0;j<n;j++)
+	cin>>max[i][j];
+	cout<<"Enter total resouce instances available\n";
+	for(i=0;i<n;i++)
+	cin>>t_avail[i];
+	for(i=0;i<p;i++)
+	for(j=0;j<n;j++)
+	rem[i][j]=max[i][j]-all[i][j];
+	for(i=0;i<p;i++)
+	{
+	
+	for(j=0;j<n;j++)
+	cout<<rem[i][j]<<" ";
+	cout<<endl;
+}
+	cout<<"Resource request for proccess :";
+	int rr,rq[n];
+	cin>>rr;
+	cout<<"Enter instances";
+	for(i=0;i<n;i++)
+	cin>>rq[i];
+		for(j=0;j<n;j++)
+		{
+			if((rq[j]>rem[rr][j])||(rq[j]>t_avail[j]))
+			{
+			cout<<"Resource allocation not possible";
+			exit(0);
+			}
+
+		}
+		for(j=0;j<n;j++)
+		{
+			t_avail[j]-=rq[j];
+			all[rr][j]+=rq[j];
+			rem[rr][j]-=rq[j];
+		}
+		k=0;
+	while(count>0)
+	{
+		for(i=0;i<p;i++)
+		{
+			kk=1;
+			if(state[i]==0)
+			{
+				for(j=0;j<n;j++)
+				{
+					if(rem[i][j]>t_avail[j])
+					kk=0;
+				}
+								
+					if(kk==1)
+					{
+					
+					state[i]=1;
+					count--;
+					for(j=0;j<n;j++)
+					t_avail[j]+=all[i][j];
+					list[k]=i;
+					k++;
+					}
+		}
+							}
+					}
+		cout<<endl;
+		cout<<"Process\tAllocation\tMax need\tRemaining need \n";
+	for(i=0;i<p;i++)
+	{
+		cout<<i<<"\t";
+	for(j=0;j<n;j++)
+	cout<<all[i][j]<<" ";
+	cout<<"\t\t";
+	for(j=0;j<n;j++)
+	cout<<max[i][j]<<" ";
+	cout<<"\t\t";
+	for(j=0;j<n;j++)
+	cout<<rem[i][j]<<" ";
+	cout<<"\t\t";
+	cout<<endl;
+	}
+	cout<<" total ";
+	for(j=0;j<n;j++)
+	cout<<t_avail[j]<<" ";
+	cout<<"\nsafe sequence : ";
+	for(i=0;i<p;i++)
+	cout<<"Process "<<list[i]+1<<" ";
+	return 0;
+}
